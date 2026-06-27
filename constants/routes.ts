@@ -12,3 +12,23 @@ export const ROUTES = {
   SIGNUP: "/signup",
   MYPAGE: "/mypage",
 } as const;
+
+interface ProductsQuery {
+  q?: string;
+  category?: string;
+}
+
+export function buildProductsUrl({ q, category }: ProductsQuery): string {
+  const searchParams = new URLSearchParams();
+
+  if (q) {
+    searchParams.set("q", q);
+  }
+
+  if (category) {
+    searchParams.set("category", category);
+  }
+
+  const query = searchParams.toString();
+  return query ? `${ROUTES.PRODUCTS}?${query}` : ROUTES.PRODUCTS;
+}

@@ -3,12 +3,13 @@ import { ProductCard } from "@/components/product/ProductCard";
 
 interface ProductGridProps {
   products: Product[];
+  emptyMessage?: string;
 }
 
-export function ProductGrid({ products }: ProductGridProps) {
+export function ProductGrid({ products, emptyMessage = "상품이 없습니다." }: ProductGridProps) {
   if (products.length === 0) {
     return (
-      <p className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">상품이 없습니다.</p>
+      <p className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">{emptyMessage}</p>
     );
   }
 

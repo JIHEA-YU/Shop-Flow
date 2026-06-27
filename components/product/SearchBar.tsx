@@ -4,11 +4,13 @@ import { Button } from "@/components/ui/button";
 
 interface SearchBarProps {
   defaultValue?: string;
+  category?: string;
 }
 
-export function SearchBar({ defaultValue }: SearchBarProps) {
+export function SearchBar({ defaultValue, category }: SearchBarProps) {
   return (
     <form action={ROUTES.PRODUCTS} method="get" className="flex gap-2">
+      {category && <input type="hidden" name="category" value={category} />}
       <Input
         type="text"
         name="q"
