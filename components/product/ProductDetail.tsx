@@ -6,9 +6,11 @@ import { Badge } from "@/components/ui/badge";
 
 interface ProductDetailProps {
   product: Product;
+  initialWishlisted?: boolean;
+  userId: string | null;
 }
 
-export function ProductDetail({ product }: ProductDetailProps) {
+export function ProductDetail({ product, initialWishlisted = false, userId }: ProductDetailProps) {
   const isOutOfStock = product.stock <= 0;
   const discountedPrice = product.price * (1 - product.discountPercentage / 100);
   const hasDiscount = product.discountPercentage > 0;
@@ -59,14 +61,21 @@ export function ProductDetail({ product }: ProductDetailProps) {
         <p className="text-sm text-zinc-600 dark:text-zinc-300">{product.description}</p>
 
         <div className="flex flex-col gap-2">
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Button type="button" disabled>
               장바구니 담기
             </Button>
-            <WishlistButton />
+            <WishlistButton
+              productId={product.id}
+              title={product.title}
+              price={product.price}
+              thumbnail={product.thumbnail}
+              initialWishlisted={initialWishlisted}
+              userId={userId}
+            />
           </div>
           <p className="text-xs text-zinc-500 dark:text-zinc-400">
-            로그인 후 이용할 수 있는 기능입니다.
+            장바구니는 로그인 후 이용할 수 있는 기능입니다.
           </p>
         </div>
 

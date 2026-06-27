@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { cache } from "react";
 import type { User } from "@supabase/supabase-js";
 
 export async function createClient() {
@@ -27,11 +28,12 @@ export async function createClient() {
   );
 }
 
-export async function getCurrentUser(): Promise<User | null> {
+// React cache()로 같은 요청 안에서 Header/페이지가 각자 호출해도 한 번만 Supabase에 확인한다.
+export const getCurrentUser = cache(async (): Promise<User | null> => {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   return user;
-}
+});

@@ -4,9 +4,16 @@ import { ProductCard } from "@/components/product/ProductCard";
 interface ProductGridProps {
   products: Product[];
   emptyMessage?: string;
+  wishlistedIds?: Set<number>;
+  userId: string | null;
 }
 
-export function ProductGrid({ products, emptyMessage = "상품이 없습니다." }: ProductGridProps) {
+export function ProductGrid({
+  products,
+  emptyMessage = "상품이 없습니다.",
+  wishlistedIds,
+  userId,
+}: ProductGridProps) {
   if (products.length === 0) {
     return (
       <p className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">{emptyMessage}</p>
@@ -16,7 +23,12 @@ export function ProductGrid({ products, emptyMessage = "상품이 없습니다."
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {products.map((product) => (
-        <ProductCard key={product.id} product={product} />
+        <ProductCard
+          key={product.id}
+          product={product}
+          initialWishlisted={wishlistedIds?.has(product.id) ?? false}
+          userId={userId}
+        />
       ))}
     </div>
   );

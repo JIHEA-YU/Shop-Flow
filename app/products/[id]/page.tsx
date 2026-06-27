@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { getProductById } from "@/lib/dummyjson/products";
 import { ProductDetail } from "@/components/product/ProductDetail";
 import { ROUTES } from "@/constants/routes";
+import { createClient, getCurrentUser } from "@/lib/supabase/server";
+import { isWishlisted } from "@/services/wishlist-service";
 import type { Product } from "@/types/product";
 
 interface ProductDetailPageProps {
@@ -46,6 +48,18 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
     notFound();
   }
 
+  const user = await getCurrentUser();
+  let initialWishlisted = false;
+
+  if (user) {
+    try {
+      const supabase = await createClient();
+      initialWishlisted = await isWishlisted(supabase, user.id, product.id);
+    } catch {
+      initialWishlisted = false;
+    }
+  }
+
   return (
     <div className="mx-auto w-full max-w-5xl flex-1 px-4 py-8 sm:px-8">
       <Link
@@ -55,7 +69,11 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
         ← 상품 목록으로
       </Link>
       <div className="mt-6">
-        <ProductDetail product={product} />
+        <ProductDetail
+          product={product}
+          initialWishlisted={initialWishlisted}
+          userId={user?.id ?? null}
+        />
       </div>
     </div>
   );

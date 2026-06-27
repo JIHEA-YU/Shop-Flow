@@ -9,7 +9,10 @@ import { ProductGrid } from "@/components/product/ProductGrid";
 import { SearchBar } from "@/components/product/SearchBar";
 import { ProductFilter, formatCategoryLabel } from "@/components/product/ProductFilter";
 import { ROUTES, buildProductsUrl } from "@/constants/routes";
+import { createClient, getCurrentUser } from "@/lib/supabase/server";
+import { getWishlistItems } from "@/services/wishlist-service";
 import type { Product } from "@/types/product";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 interface ProductsPageProps {
   searchParams: Promise<{ q?: string; category?: string }>;
@@ -48,15 +51,36 @@ async function loadCategories(): Promise<{ categories: string[]; hasError: boole
   }
 }
 
+async function loadWishlistedIds(
+  supabase: SupabaseClient,
+  userId: string | null,
+): Promise<Set<number>> {
+  if (!userId) {
+    return new Set();
+  }
+
+  try {
+    const items = await getWishlistItems(supabase, userId);
+    return new Set(items.map((item) => item.product_id));
+  } catch {
+    return new Set();
+  }
+}
+
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
   const { q, category: categoryParam } = await searchParams;
   const query = q?.trim() ?? "";
   const category = categoryParam?.trim() ?? "";
 
-  const [{ products, hasError }, { categories, hasError: categoriesHasError }] = await Promise.all([
-    loadProducts(query, category),
-    loadCategories(),
-  ]);
+  const user = await getCurrentUser();
+  const supabase = await createClient();
+
+  const [{ products, hasError }, { categories, hasError: categoriesHasError }, wishlistedIds] =
+    await Promise.all([
+      loadProducts(query, category),
+      loadCategories(),
+      loadWishlistedIds(supabase, user?.id ?? null),
+    ]);
 
   const statusText = [
     query ? `'${query}' 검색 결과` : null,
@@ -117,6 +141,8 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
             <ProductGrid
               products={products}
               emptyMessage={query || category ? "조건에 맞는 상품이 없습니다." : undefined}
+              wishlistedIds={wishlistedIds}
+              userId={user?.id ?? null}
             />
           </>
         )}
