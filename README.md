@@ -2,6 +2,8 @@
 
 Next.js, Supabase, Stripe, DummyJSON으로 만든 미니 쇼핑몰 웹 애플리케이션입니다. 상품 탐색, 찜, 장바구니, 테스트 결제, 주문 내역 조회 기능을 제공합니다.
 
+배포 주소: [https://shopflow-iota-fawn.vercel.app](https://shopflow-iota-fawn.vercel.app)
+
 ## 주요 기능
 
 - [x] 상품 목록
