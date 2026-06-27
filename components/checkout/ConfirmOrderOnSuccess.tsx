@@ -83,8 +83,10 @@ export function ConfirmOrderOnSuccess({ sessionId }: ConfirmOrderOnSuccessProps)
           : "결제가 완료되었고 주문이 저장되었습니다."}
       </p>
       <div className="flex gap-3">
-        <Button render={<Link href={ROUTES.ORDER_DETAIL(state.orderId)} />}>주문 상세 보기</Button>
-        <Button variant="outline" render={<Link href={ROUTES.PRODUCTS} />}>
+        <Button nativeButton={false} render={<Link href={ROUTES.ORDER_DETAIL(state.orderId)} />}>
+          주문 상세 보기
+        </Button>
+        <Button variant="outline" nativeButton={false} render={<Link href={ROUTES.PRODUCTS} />}>
           상품 목록으로
         </Button>
       </div>

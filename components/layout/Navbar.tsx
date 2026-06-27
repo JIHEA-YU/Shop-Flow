@@ -6,7 +6,6 @@ const NAV_LINKS = [
   { label: "Wishlist", href: ROUTES.WISHLIST },
   { label: "Cart", href: ROUTES.CART },
   { label: "Orders", href: ROUTES.ORDERS },
-  { label: "My Page", href: ROUTES.MYPAGE },
 ];
 
 export function Navbar() {

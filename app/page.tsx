@@ -1,65 +1,70 @@
-import Image from "next/image";
+import Link from "next/link";
+import { getProductCategories, getProducts } from "@/lib/dummyjson/products";
+import { HomeSearchBar } from "@/components/home/HomeSearchBar";
+import { HomeCategorySelector } from "@/components/home/HomeCategorySelector";
+import { BestProductSection } from "@/components/home/BestProductSection";
+import { Button } from "@/components/ui/button";
+import { ROUTES } from "@/constants/routes";
+import type { Product } from "@/types/product";
 
-export default function Home() {
+const BEST_PRODUCT_COUNT = 8;
+const HOME_CATEGORY_COUNT = 10;
+
+async function loadBestProducts(): Promise<{ products: Product[]; hasError: boolean }> {
+  try {
+    const { products } = await getProducts();
+    const bestProducts = [...products]
+      .sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0))
+      .slice(0, BEST_PRODUCT_COUNT);
+    return { products: bestProducts, hasError: false };
+  } catch {
+    return { products: [], hasError: true };
+  }
+}
+
+async function loadCategories(): Promise<{ categories: string[]; hasError: boolean }> {
+  try {
+    const categories = await getProductCategories();
+    return { categories: categories.slice(0, HOME_CATEGORY_COUNT), hasError: false };
+  } catch {
+    return { categories: [], hasError: true };
+  }
+}
+
+export default async function Home() {
+  const [
+    { products: bestProducts, hasError: productsHasError },
+    { categories, hasError: categoriesHasError },
+  ] = await Promise.all([loadBestProducts(), loadCategories()]);
+
   return (
-    <div className="flex flex-1 flex-col items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex w-full max-w-3xl flex-1 flex-col items-center justify-between bg-white px-16 py-32 sm:items-start dark:bg-black">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl leading-10 font-semibold tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="mx-auto w-full max-w-5xl flex-1 px-4 py-10 sm:px-8">
+      <section className="flex flex-col items-center gap-3 py-8 text-center">
+        <h1 className="text-3xl font-bold text-zinc-950 sm:text-4xl dark:text-zinc-50">ShopFlow</h1>
+        <div className="mt-4 w-full">
+          <HomeSearchBar />
+        </div>
+      </section>
+
+      <section className="mt-6">
+        {categoriesHasError ? (
+          <p className="text-center text-sm text-zinc-500 dark:text-zinc-400">
+            카테고리 목록을 불러오지 못했습니다.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="bg-foreground text-background flex h-12 w-full items-center justify-center gap-2 rounded-full px-5 transition-colors hover:bg-[#383838] md:w-[158px] dark:hover:bg-[#ccc]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] md:w-[158px] dark:border-white/[.145] dark:hover:bg-[#1a1a1a]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+        ) : (
+          <HomeCategorySelector categories={categories} />
+        )}
+      </section>
+
+      <section className="mt-12">
+        <BestProductSection products={bestProducts} hasError={productsHasError} />
+      </section>
+
+      <div className="mt-10 flex justify-center">
+        <Button size="lg" nativeButton={false} render={<Link href={ROUTES.PRODUCTS} />}>
+          상품 더 둘러보기
+        </Button>
+      </div>
     </div>
   );
 }

@@ -32,7 +32,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
       return;
     }
 
-    router.push(isSafeRedirectPath(redirectTo) ? redirectTo : ROUTES.MYPAGE);
+    router.push(isSafeRedirectPath(redirectTo) ? redirectTo : ROUTES.HOME);
     router.refresh();
   }
 
