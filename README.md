@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ShopFlow
 
-## Getting Started
+Next.js, Supabase, Stripe, DummyJSON으로 만든 미니 쇼핑몰 웹 애플리케이션입니다. 상품 탐색, 찜, 장바구니, 테스트 결제, 주문 내역 조회 기능을 제공합니다.
 
-First, run the development server:
+## 주요 기능
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- [x] 상품 목록
+- [x] 상품 검색
+- [x] 카테고리 필터
+- [x] 상품 상세
+- [x] 회원가입 / 로그인 / 로그아웃
+- [x] 찜 목록
+- [x] 장바구니
+- [x] Stripe 테스트 결제
+- [x] 주문 저장
+- [x] 주문 내역
+- [x] 마이페이지
+
+## 기술 스택
+
+| 영역 | 기술 |
+| --- | --- |
+| 프레임워크 | Next.js (App Router), TypeScript |
+| 스타일 | Tailwind CSS, shadcn/ui |
+| 상품 데이터 | DummyJSON API |
+| 인증 | Supabase Auth |
+| 데이터베이스 | Supabase (PostgreSQL) |
+| 결제 | Stripe Checkout (Test Mode) |
+| 배포 | Vercel |
+
+## 프로젝트 구조
+
+```text
+app/            라우트 (페이지, API Route)
+components/     화면 단위 컴포넌트
+lib/            DummyJSON, Supabase, Stripe 클라이언트
+services/       Supabase 데이터 조회/조작 함수
+types/          공용 타입 정의
+supabase/sql/   Supabase 테이블/RLS 정책 SQL
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Stripe 테스트 결제
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+결제는 Stripe **Test Mode**의 secret key를 사용합니다. 실제 결제가 이루어지지 않으며, 아래 테스트 카드로 결제 흐름을 확인할 수 있습니다.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```text
+카드 번호: 4242 4242 4242 4242
+만료일: 미래의 임의 날짜
+CVC / 우편번호: 임의 값
+```
 
-## Learn More
+## 제한 사항
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- 상품 데이터는 DummyJSON 샘플 API를 사용합니다.
+- 결제는 실제 결제가 아닌 Stripe Test Mode 기준입니다.
+- 배송, 쿠폰, 관리자 기능은 제공하지 않습니다.
+- 현재는 결제 성공 페이지 방문 시점에 주문을 저장하며, 실서비스에서는 Stripe webhook 기반 처리가 권장됩니다.
