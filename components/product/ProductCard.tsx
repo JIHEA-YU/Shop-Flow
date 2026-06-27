@@ -2,12 +2,15 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/types/product";
 import { ROUTES } from "@/constants/routes";
+import { Badge } from "@/components/ui/badge";
 
 interface ProductCardProps {
   product: Product;
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  const isOutOfStock = product.stock <= 0;
+
   return (
     <Link
       href={ROUTES.PRODUCT_DETAIL(product.id)}
@@ -23,9 +26,14 @@ export function ProductCard({ product }: ProductCardProps) {
         />
       </div>
       <div className="flex flex-1 flex-col gap-1 p-3">
-        <span className="text-xs font-medium text-zinc-500 uppercase dark:text-zinc-400">
-          {product.category}
-        </span>
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-xs font-medium text-zinc-500 uppercase dark:text-zinc-400">
+            {product.category}
+          </span>
+          <Badge variant={isOutOfStock ? "destructive" : "secondary"}>
+            {isOutOfStock ? "Out of stock" : `Stock: ${product.stock}`}
+          </Badge>
+        </div>
         <h3 className="line-clamp-2 text-sm font-semibold text-zinc-950 dark:text-zinc-50">
           {product.title}
         </h3>
