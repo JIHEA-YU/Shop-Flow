@@ -1,7 +1,7 @@
 import type { Product } from "@/types/product";
 import { ProductImageGallery } from "@/components/product/ProductImageGallery";
 import { WishlistButton } from "@/components/wishlist/WishlistButton";
-import { Button } from "@/components/ui/button";
+import { AddToCartButton } from "@/components/cart/AddToCartButton";
 import { Badge } from "@/components/ui/badge";
 
 interface ProductDetailProps {
@@ -60,23 +60,22 @@ export function ProductDetail({ product, initialWishlisted = false, userId }: Pr
 
         <p className="text-sm text-zinc-600 dark:text-zinc-300">{product.description}</p>
 
-        <div className="flex flex-col gap-2">
-          <div className="flex flex-wrap items-center gap-2">
-            <Button type="button" disabled>
-              장바구니 담기
-            </Button>
-            <WishlistButton
-              productId={product.id}
-              title={product.title}
-              price={product.price}
-              thumbnail={product.thumbnail}
-              initialWishlisted={initialWishlisted}
-              userId={userId}
-            />
-          </div>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400">
-            장바구니는 로그인 후 이용할 수 있는 기능입니다.
-          </p>
+        <div className="flex flex-wrap items-center gap-2">
+          <AddToCartButton
+            productId={product.id}
+            title={product.title}
+            price={product.price}
+            thumbnail={product.thumbnail}
+            userId={userId}
+          />
+          <WishlistButton
+            productId={product.id}
+            title={product.title}
+            price={product.price}
+            thumbnail={product.thumbnail}
+            initialWishlisted={initialWishlisted}
+            userId={userId}
+          />
         </div>
 
         {(product.shippingInformation || product.warrantyInformation || product.returnPolicy) && (

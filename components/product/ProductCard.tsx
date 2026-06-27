@@ -4,6 +4,7 @@ import type { Product } from "@/types/product";
 import { ROUTES } from "@/constants/routes";
 import { Badge } from "@/components/ui/badge";
 import { WishlistButton } from "@/components/wishlist/WishlistButton";
+import { AddToCartButton } from "@/components/cart/AddToCartButton";
 
 interface ProductCardProps {
   product: Product;
@@ -36,7 +37,7 @@ export function ProductCard({ product, initialWishlisted = false, userId }: Prod
             className="object-cover transition-transform group-hover:scale-105"
           />
         </div>
-        <div className="flex flex-1 flex-col gap-1 p-3">
+        <div className="flex flex-1 flex-col gap-1 p-3 pb-0">
           <div className="flex items-center justify-between gap-2">
             <span className="text-xs font-medium text-zinc-500 uppercase dark:text-zinc-400">
               {product.category}
@@ -48,16 +49,26 @@ export function ProductCard({ product, initialWishlisted = false, userId }: Prod
           <h3 className="line-clamp-2 text-sm font-semibold text-zinc-950 dark:text-zinc-50">
             {product.title}
           </h3>
-          <div className="mt-auto flex items-center justify-between pt-1">
-            <span className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
-              ${product.price.toFixed(2)}
-            </span>
-            <span className="text-xs text-zinc-500 dark:text-zinc-400">
-              ★ {product.rating.toFixed(1)}
-            </span>
-          </div>
         </div>
       </Link>
+      <div className="mt-auto flex flex-col gap-2 p-3 pt-2">
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
+            ${product.price.toFixed(2)}
+          </span>
+          <span className="text-xs text-zinc-500 dark:text-zinc-400">
+            ★ {product.rating.toFixed(1)}
+          </span>
+        </div>
+        <AddToCartButton
+          productId={product.id}
+          title={product.title}
+          price={product.price}
+          thumbnail={product.thumbnail}
+          userId={userId}
+          className="w-full"
+        />
+      </div>
     </div>
   );
 }

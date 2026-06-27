@@ -15,6 +15,7 @@ interface WishlistButtonProps {
   thumbnail: string;
   initialWishlisted?: boolean;
   userId: string | null;
+  onToggle?: (wishlisted: boolean) => void;
 }
 
 export function WishlistButton({
@@ -24,6 +25,7 @@ export function WishlistButton({
   thumbnail,
   initialWishlisted = false,
   userId,
+  onToggle,
 }: WishlistButtonProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -54,6 +56,7 @@ export function WishlistButton({
         thumbnail,
       });
       setIsWishlisted(nowWishlisted);
+      onToggle?.(nowWishlisted);
     } catch {
       setIsWishlisted(previous);
       setError("찜 처리 중 오류가 발생했습니다.");
