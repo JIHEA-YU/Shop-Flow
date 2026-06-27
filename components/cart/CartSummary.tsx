@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { ROUTES } from "@/constants/routes";
 
 interface CartSummaryProps {
   itemCount: number;
@@ -9,7 +10,7 @@ interface CartSummaryProps {
 }
 
 export function CartSummary({ itemCount, total }: CartSummaryProps) {
-  const [showNotice, setShowNotice] = useState(false);
+  const router = useRouter();
 
   return (
     <div className="flex flex-col gap-3 rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
@@ -20,14 +21,13 @@ export function CartSummary({ itemCount, total }: CartSummaryProps) {
         <span>총 합계</span>
         <span>${total.toFixed(2)}</span>
       </div>
-      <Button type="button" onClick={() => setShowNotice(true)} disabled={itemCount === 0}>
+      <Button
+        type="button"
+        onClick={() => router.push(ROUTES.CHECKOUT)}
+        disabled={itemCount === 0}
+      >
         결제하기
       </Button>
-      {showNotice && (
-        <p className="text-xs text-zinc-500 dark:text-zinc-400">
-          다음 단계에서 결제 기능을 구현할 예정입니다.
-        </p>
-      )}
     </div>
   );
 }
