@@ -32,3 +32,7 @@ export function buildProductsUrl({ q, category }: ProductsQuery): string {
   const query = searchParams.toString();
   return query ? `${ROUTES.PRODUCTS}?${query}` : ROUTES.PRODUCTS;
 }
+
+export function isSafeRedirectPath(path: string | null | undefined): path is string {
+  return !!path && path.startsWith("/") && !path.startsWith("//");
+}
