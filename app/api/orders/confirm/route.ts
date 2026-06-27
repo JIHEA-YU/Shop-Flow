@@ -6,6 +6,9 @@ import { clearCart, getCartItems, getCartTotal } from "@/services/cart-service";
 import { createOrderFromCart, getOrderByStripeSessionId } from "@/services/order-service";
 import type { CartItem } from "@/types/cart";
 
+// Stripe SDK는 Edge runtime의 Node.js API 제약과 충돌할 수 있어 Node.js runtime으로 고정한다.
+export const runtime = "nodejs";
+
 interface ConfirmOrderRequestBody {
   sessionId?: string;
 }

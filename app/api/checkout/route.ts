@@ -6,6 +6,9 @@ import { getCartItems } from "@/services/cart-service";
 import { ROUTES } from "@/constants/routes";
 import type { CartItem } from "@/types/cart";
 
+// Stripe SDK는 Edge runtime의 Node.js API 제약과 충돌할 수 있어 Node.js runtime으로 고정한다.
+export const runtime = "nodejs";
+
 function buildLineItems(cartItems: CartItem[]): Stripe.Checkout.SessionCreateParams.LineItem[] {
   return cartItems.map((item) => {
     if (typeof item.price !== "number" || !Number.isFinite(item.price)) {
