@@ -4,3 +4,7 @@ out
 build
 public
 package-lock.json
+
+# User-maintained logs; do not auto-reformat
+PROMPTS.md
+README.md

@@ -16,8 +16,18 @@ export function getProducts(): Promise<ProductsResponse> {
   return fetchDummyJson<ProductsResponse>("/products");
 }
 
-export function getProductById(id: number): Promise<Product> {
-  return fetchDummyJson<Product>(`/products/${id}`);
+export async function getProductById(id: number): Promise<Product | null> {
+  const res = await fetch(`${DUMMYJSON_BASE_URL}/products/${id}`);
+
+  if (res.status === 404) {
+    return null;
+  }
+
+  if (!res.ok) {
+    throw new Error(`DummyJSON request failed: ${res.status} ${res.statusText}`);
+  }
+
+  return res.json() as Promise<Product>;
 }
 
 export function searchProducts(query: string): Promise<ProductsResponse> {
